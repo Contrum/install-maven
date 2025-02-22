@@ -1,0 +1,80 @@
+name: Test Windows Maven Installation
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+  workflow_dispatch:  # Allows manual trigger
+
+jobs:
+  test-installation:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check PowerShell Version
+        shell: pwsh
+        run: |
+          $PSVersionTable.PSVersion
+
+      - name: Set ExecutionPolicy
+        shell: pwsh
+        run: |
+          Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process -Force
+
+      - name: Run Installation Script
+        shell: pwsh
+        run: |
+          Write-Host "Starting Maven installation..."
+          ./install-maven.ps1
+
+      - name: Verify PATH Environment Variable
+        shell: pwsh
+        run: |
+          Write-Host "Current PATH:"
+          $env:Path -split ';' | Where-Object { $_ -match 'maven' }
+
+      - name: Verify Maven Installation
+        shell: pwsh
+        run: |
+          Write-Host "Testing Maven installation..."
+          # Refresh environment variables
+          $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "User") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "Machine")
+          
+          # Check Maven version
+          mvn -version
+          
+          # Verify MAVEN_HOME
+          Write-Host "`nMAVEN_HOME:"
+          $env:MAVEN_HOME
+          
+          # Verify M2_HOME
+          Write-Host "`nM2_HOME:"
+          $env:M2_HOME
+
+      - name: Test Simple Maven Project
+        shell: pwsh
+        run: |
+          # Create a test Maven project
+          Write-Host "Creating test Maven project..."
+          mvn archetype:generate `
+            -DgroupId=com.test `
+            -DartifactId=test-project `
+            -DarchetypeArtifactId=maven-archetype-quickstart `
+            -DarchetypeVersion=1.4 `
+            -DinteractiveMode=false
+          
+          # Build the test project
+          cd test-project
+          Write-Host "`nBuilding test project..."
+          mvn clean package
+          
+          # Check if the jar was created
+          if (Test-Path "target/test-project-1.0-SNAPSHOT.jar") {
+              Write-Host "Test project built successfully!"
+          } else {
+              Write-Host "Error: Test project build failed!"
+              exit 1
+          }
