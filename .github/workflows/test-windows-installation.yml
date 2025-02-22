@@ -57,24 +57,43 @@ jobs:
       - name: Test Simple Maven Project
         shell: pwsh
         run: |
+          # Create and move to test directory
+          New-Item -ItemType Directory -Path "maven-test" -Force
+          Set-Location -Path "maven-test"
+          Write-Host "Current working directory: $PWD"
+          
           # Create a test Maven project
-          Write-Host "Creating test Maven project..."
-          mvn archetype:generate `
+          Write-Host "`nCreating test Maven project..."
+          & mvn archetype:generate `
             -DgroupId=com.test `
             -DartifactId=test-project `
             -DarchetypeArtifactId=maven-archetype-quickstart `
             -DarchetypeVersion=1.4 `
             -DinteractiveMode=false
           
-          # Build the test project
-          cd test-project
-          Write-Host "`nBuilding test project..."
-          mvn clean package
+          # Verify project creation
+          if (-not (Test-Path "test-project")) {
+              Write-Host "Error: Project directory was not created!"
+              exit 1
+          }
           
-          # Check if the jar was created
+          # Build the test project
+          Set-Location -Path "test-project"
+          Write-Host "`nCurrent working directory: $PWD"
+          Write-Host "Building test project..."
+          
+          & mvn clean package
+          
+          # Check build result
+          if ($LASTEXITCODE -ne 0) {
+              Write-Host "Error: Maven build failed with exit code $LASTEXITCODE"
+              exit 1
+          }
+          
+          # Verify artifact creation
           if (Test-Path "target/test-project-1.0-SNAPSHOT.jar") {
               Write-Host "Test project built successfully!"
           } else {
-              Write-Host "Error: Test project build failed!"
+              Write-Host "Error: Test project build failed - JAR file not found!"
               exit 1
           }
