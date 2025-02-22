@@ -1,6 +1,6 @@
 # Automatic Maven Installer
 
-This PowerShell script automatically downloads and installs the latest version of Apache Maven on Windows systems. The script sets up Maven in the user's Documents folder and configures all necessary environment variables.
+This repository provides scripts for automatically downloading and installing the latest version of Apache Maven on Windows, Linux, and macOS systems. Each script sets up Maven in the user's Documents folder and configures all necessary environment variables.
 
 ## Features
 
@@ -10,24 +10,40 @@ This PowerShell script automatically downloads and installs the latest version o
 - Verifies the installation
 - Cleans up temporary files
 - Provides detailed feedback during installation
+- Supports Windows, Linux, and macOS
 
 ## Prerequisites
 
+### Windows
 - Windows operating system
 - PowerShell 5.1 or higher
 - Internet connection
 - Administrator privileges (for script execution)
 
+### Linux
+- Bash shell
+- Internet connection
+- `curl` and `grep` commands installed
+- Write permissions to ~/Documents
+
+### macOS
+- macOS operating system
+- Zsh shell (default since Catalina)
+- Internet connection
+- `curl` command installed
+- Write permissions to ~/Documents
+
 ## Installation
 
+### Windows
 1. Clone this repository:
    ```powershell
-   git clone https://github.com/yourusername/maven-installer.git
+   git clone https://github.com/Contrum/install-maven.git
    ```
 
 2. Navigate to the script directory:
    ```powershell
-   cd maven-installer
+   cd install-maven
    ```
 
 3. If needed, unblock the script:
@@ -40,30 +56,65 @@ This PowerShell script automatically downloads and installs the latest version o
    .\install-maven.ps1
    ```
 
-## What the Script Does
+### Linux
+1. Clone the repository and navigate to it:
+   ```bash
+   git clone https://github.com/Contrum/install-maven.git
+   cd install-maven
+   ```
 
-1. Creates a Maven directory in your Documents folder
-2. Downloads the latest Maven version from the official Apache website
-3. Extracts the Maven files
-4. Sets up the following environment variables:
+2. Make the script executable and run it:
+   ```bash
+   chmod +x install-maven-linux.sh
+   ./install-maven-linux.sh
+   ```
+
+3. Apply the changes:
+   ```bash
+   source ~/.bashrc
+   ```
+
+### macOS
+1. Clone the repository and navigate to it:
+   ```bash
+   git clone https://github.com/Contrum/install-maven.git
+   cd install-maven
+   ```
+
+2. Make the script executable and run it:
+   ```bash
+   chmod +x install-maven-mac.sh
+   ./install-maven-mac.sh
+   ```
+
+3. Apply the changes:
+   ```bash
+   source ~/.zshrc
+   ```
+
+## What the Scripts Do
+
+1. Create a Maven directory in your Documents folder
+2. Download the latest Maven version from the official Apache website
+3. Extract the Maven files
+4. Set up the following environment variables:
    - MAVEN_HOME
    - M2_HOME
-   - Adds Maven's bin directory to PATH
-5. Verifies the installation by running `mvn -version`
+   - Add Maven's bin directory to PATH
+5. Verify the installation by running `mvn -version`
 
 ## After Installation
 
 After the script completes:
-1. Restart your PowerShell/Command Prompt
+1. Restart your terminal/PowerShell/Command Prompt
 2. Verify the installation by running:
-   ```powershell
+   ```bash
    mvn -version
    ```
 
 ## Troubleshooting
 
-If you encounter any issues:
-
+### Windows Issues
 1. **Execution Policy Error**
    ```powershell
    Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
@@ -72,9 +123,24 @@ If you encounter any issues:
 2. **Access Denied**
    - Make sure you're running PowerShell as Administrator
 
-3. **Download Issues**
+### Linux/macOS Issues
+1. **Permission Denied**
+   ```bash
+   chmod +x install-maven-*.sh
+   ```
+
+2. **Command Not Found**
+   - Linux: Run `source ~/.bashrc`
+   - macOS: Run `source ~/.zshrc`
+
+### Common Issues
+1. **Download Issues**
    - Check your internet connection
    - Verify that https://dlcdn.apache.org is accessible
+
+2. **PATH Issues**
+   - Restart your terminal after installation
+   - Verify environment variables are set correctly
 
 ## Contributing
 
@@ -93,7 +159,9 @@ We welcome contributions to improve the Maven installer! Here's how you can help
    ```
 4. Make your changes
    - Keep the code style consistent
-   - Ensure the GitHub Action workflow passes
+   - Update documentation if needed
+   - Test on your target platform
+   - Ensure the GitHub Action workflows pass
 
 5. Commit your changes using clear commit messages
    ```bash
@@ -109,8 +177,8 @@ We welcome contributions to improve the Maven installer! Here's how you can help
 
 ### Development Setup
 
-1. Ensure you have PowerShell 5.1 or higher installed
-2. Set execution policy for development:
+1. Ensure you have the required shell and tools for your platform
+2. For Windows: Set execution policy for development:
    ```powershell
    Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
    ```
