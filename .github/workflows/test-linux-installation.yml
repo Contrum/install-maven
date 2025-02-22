@@ -1,0 +1,25 @@
+name: Test Linux Maven Installation
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+  workflow_dispatch:
+
+jobs:
+  test-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Make script executable
+        run: chmod +x ./install-maven-linux.sh
+
+      - name: Run Installation Script
+        run: ./install-maven-linux.sh
+
+      - name: Verify Installation
+        run: |
+          source ~/.bashrc
+          mvn --version
