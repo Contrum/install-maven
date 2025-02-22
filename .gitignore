@@ -1,2 +1,9 @@
 .codebuddy/*
 .idea/*
+
+# Windows
+Thumbs.db
+desktop.ini
+
+# PowerShell
+*.ps1.log
