@@ -9,7 +9,7 @@ echo "Maven directory created: $MAVEN_PATH"
 
 # Get latest Maven version
 MAVEN_URL="https://dlcdn.apache.org/maven/maven-3/"
-LATEST_VERSION=$(curl -s "$MAVEN_URL" | grep -oP '3\.\d+\.\d+/' | tail -1 | tr -d '/')
+LATEST_VERSION=$(curl -s "$MAVEN_URL" | grep -o '3\.[0-9]\+\.[0-9]\+/' | tail -1 | tr -d '/')
 
 if [ -z "$LATEST_VERSION" ]; then
     echo "Error: Could not determine latest Maven version"
