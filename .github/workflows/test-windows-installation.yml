@@ -8,7 +8,7 @@ on:
   workflow_dispatch:  # Allows manual trigger
 
 jobs:
-  test-installation:
+  test-windows-installation:
     runs-on: windows-latest
 
     steps:
